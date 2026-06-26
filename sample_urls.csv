@@ -1,0 +1,9 @@
+url,label
+https://www.google.com/search?q=cybersecurity,legitimate
+https://www.paypal.com/signin,legitimate
+http://192.168.1.20/login,phishing-like
+http://paypa1-secure-login.example.com/verify/account,phishing-like
+https://bit.ly/free-gift-login,phishing-like
+http://microsoft-support-update.example.net/password-reset,phishing-like
+https://www.wikipedia.org/,legitimate
+https://accounts.google.com/,legitimate
