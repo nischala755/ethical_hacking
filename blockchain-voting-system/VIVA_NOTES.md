@@ -22,11 +22,19 @@ To build a browser-based voting system where each vote is stored as blockchain d
 - Vote hash generation
 - Merkle root generation
 - Optional MetaMask wallet identity
+- Hardhat local Ethereum blockchain
+- On-chain Solidity voting
 - Decentralized node sync simulation
 - Election result calculation
 - Blockchain ledger display
 - Tamper detection demo
 - Solidity smart contract sample
+
+## Blockchain Platform Used
+
+This project uses the Hardhat Ethereum development platform. Hardhat runs a local Ethereum blockchain on `http://127.0.0.1:8545` with chain ID `31337`.
+
+The Solidity contract `DecentralizedVoting.sol` is deployed to this blockchain. The website connects to it using MetaMask and ethers.js. When the user clicks `Vote On-Chain`, MetaMask sends an actual Ethereum transaction to the deployed smart contract.
 
 ## Algorithm
 
@@ -56,9 +64,20 @@ To build a browser-based voting system where each vote is stored as blockchain d
 
 The `contracts/DecentralizedVoting.sol` file is a simple Ethereum smart contract. It stores candidates, lets each wallet vote once, counts votes on-chain, and allows the admin to open or close the election.
 
+## Platform Demo Steps
+
+1. Run `npm run chain` to start the Hardhat blockchain.
+2. Run `npm run deploy:localhost` to deploy the Solidity contract.
+3. Run `npm run serve` to open the website.
+4. Add Hardhat localhost network in MetaMask with chain ID `31337`.
+5. Click `Load Contract` in the website.
+6. Select a candidate and click `Vote On-Chain`.
+7. Confirm the transaction in MetaMask.
+8. Show that the vote count is read from the deployed smart contract.
+
 ## Limitations
 
-This is an educational simulation, not a production election system. A real system would require secure identity verification, smart contracts, encrypted ballots, anonymous voting, consensus between real network nodes, and deployment on a blockchain network.
+This is an educational local-chain prototype, not a production election system. A real system would require secure identity verification, encrypted ballots, anonymous voting, stronger consensus design, audits, and deployment on a public or permissioned blockchain network.
 
 ## Future Scope
 

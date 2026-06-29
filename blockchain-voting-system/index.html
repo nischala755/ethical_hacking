@@ -92,6 +92,36 @@
         <div class="ledger" id="ledger"></div>
       </div>
 
+      <div class="panel platform-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Ethereum platform</p>
+            <h2>Hardhat Smart Contract Demo</h2>
+          </div>
+          <button id="loadContractBtn">Load Contract</button>
+        </div>
+        <div class="platform-status" id="platformStatus">Run Hardhat, deploy the contract, then load it here.</div>
+        <div class="contract-grid">
+          <div>
+            <small>Platform</small>
+            <strong>Hardhat Local Ethereum</strong>
+          </div>
+          <div>
+            <small>Chain ID</small>
+            <strong id="chainIdText">31337</strong>
+          </div>
+          <div>
+            <small>Contract</small>
+            <strong id="contractAddressText">Not deployed</strong>
+          </div>
+        </div>
+        <div class="inline-actions">
+          <button id="switchNetworkBtn">Switch to Hardhat</button>
+          <button class="primary-button compact" id="onChainVoteBtn">Vote On-Chain</button>
+        </div>
+        <div class="onchain-results" id="onChainResults"></div>
+      </div>
+
       <div class="panel concepts-panel">
         <div class="panel-header">
           <div>
@@ -121,6 +151,8 @@
     </section>
   </main>
 
+  <script src="vendor/ethers.umd.min.js"></script>
+  <script src="contract-config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

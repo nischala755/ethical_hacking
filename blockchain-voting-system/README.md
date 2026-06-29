@@ -1,6 +1,6 @@
 # Decentralized Voting System
 
-This is a mini blockchain project for a course demo. It is a static web app that simulates a decentralized voting network where votes are stored in mined blocks, each block is linked with a cryptographic hash, and tampering is detected by chain validation.
+This is a mini blockchain project for a course demo. It uses a Hardhat local Ethereum blockchain, a Solidity smart contract, MetaMask, and a browser UI. The UI also includes a local blockchain simulator to explain hashing, Merkle roots, proof-of-work, and tamper detection.
 
 ## Features
 
@@ -16,12 +16,40 @@ This is a mini blockchain project for a course demo. It is a static web app that
 - Inspect the blockchain ledger.
 - Run a tamper demo to show why changing old votes breaks validation.
 - Include a Solidity smart contract example for Ethereum-style deployment.
+- Deploy and interact with the voting contract on a Hardhat Ethereum blockchain.
+- Submit real on-chain vote transactions through MetaMask.
 
 ## How to Run
 
-Open `index.html` in any modern browser.
+Install dependencies:
 
-No server, database, or package installation is required.
+```powershell
+npm install
+```
+
+Start the Hardhat blockchain:
+
+```powershell
+npm run chain
+```
+
+In another terminal, deploy the contract:
+
+```powershell
+npm run deploy:localhost
+```
+
+In another terminal, run the website:
+
+```powershell
+npm run serve
+```
+
+Open:
+
+`http://127.0.0.1:4173`
+
+For the full platform demo instructions, read `BLOCKCHAIN_PLATFORM_DEMO.md`.
 
 ## Project Files
 
@@ -29,7 +57,17 @@ No server, database, or package installation is required.
 - `styles.css` contains the responsive UI design.
 - `app.js` contains the blockchain voting logic.
 - `contracts/DecentralizedVoting.sol` contains a simple Solidity smart contract.
+- `hardhat.config.js` configures the Hardhat Ethereum network.
+- `scripts/deploy.js` deploys the smart contract and generates frontend config.
+- `contract-config.js` stores the deployed contract address and ABI for the browser.
+- `test/DecentralizedVoting.test.js` tests the Solidity voting rules.
 - `VIVA_NOTES.md` contains short presentation notes.
+
+## Blockchain Platform Used
+
+This project uses **Hardhat**, an Ethereum development platform. The smart contract is deployed to a local Ethereum blockchain at `http://127.0.0.1:8545` with chain ID `31337`.
+
+The website connects to the deployed contract using MetaMask and ethers.js. The `Vote On-Chain` button sends a real transaction to the Solidity smart contract.
 
 ## Blockchain Concepts Used
 
@@ -75,6 +113,14 @@ The Solidity contract in `contracts/DecentralizedVoting.sol` shows the core on-c
 - each wallet can vote only once
 - candidate vote counts are stored on-chain
 - vote events are emitted for transparency
+
+### Verified Commands
+
+```powershell
+npm run compile
+npm test
+npm run deploy:localhost
+```
 
 ## Demo Flow
 

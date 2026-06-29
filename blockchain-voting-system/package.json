@@ -1,0 +1,18 @@
+{
+  "name": "decentralized-voting-system",
+  "version": "1.0.0",
+  "description": "Blockchain course mini project using a Hardhat Ethereum local blockchain and a browser voting UI.",
+  "private": true,
+  "scripts": {
+    "chain": "hardhat node",
+    "compile": "hardhat compile",
+    "deploy:localhost": "hardhat run scripts/deploy.js --network localhost",
+    "test": "hardhat test",
+    "serve": "python -m http.server 4173 --bind 127.0.0.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "ethers": "^6.13.4",
+    "hardhat": "^2.22.19"
+  }
+}

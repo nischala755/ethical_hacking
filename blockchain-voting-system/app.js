@@ -25,11 +25,26 @@ let state = {
   tampered: false
 };
 
+let platform = {
+  provider: null,
+  signer: null,
+  contract: null,
+  account: "",
+  loaded: false
+};
+
 const els = {
   voterName: document.querySelector("#voterName"),
   voterSelect: document.querySelector("#voterSelect"),
   createVoterBtn: document.querySelector("#createVoterBtn"),
   walletBtn: document.querySelector("#walletBtn"),
+  loadContractBtn: document.querySelector("#loadContractBtn"),
+  switchNetworkBtn: document.querySelector("#switchNetworkBtn"),
+  onChainVoteBtn: document.querySelector("#onChainVoteBtn"),
+  platformStatus: document.querySelector("#platformStatus"),
+  chainIdText: document.querySelector("#chainIdText"),
+  contractAddressText: document.querySelector("#contractAddressText"),
+  onChainResults: document.querySelector("#onChainResults"),
   candidateList: document.querySelector("#candidateList"),
   castVoteBtn: document.querySelector("#castVoteBtn"),
   statusLine: document.querySelector("#statusLine"),
@@ -147,6 +162,11 @@ function getCandidateName(candidateId) {
 function setStatus(message, type = "info") {
   els.statusLine.textContent = message;
   els.statusLine.style.color = type === "error" ? "var(--red)" : type === "success" ? "var(--green)" : "var(--muted)";
+}
+
+function setPlatformStatus(message, type = "info") {
+  els.platformStatus.textContent = message;
+  els.platformStatus.className = `platform-status ${type === "success" ? "success" : type === "error" ? "error" : ""}`;
 }
 
 async function validateChain() {
@@ -332,7 +352,16 @@ async function render() {
   els.chainHealth.className = `chain-health ${validation.valid ? "valid" : "invalid"}`;
   els.mineBtn.disabled = state.pendingVotes.length === 0;
   els.castVoteBtn.disabled = !els.voterSelect.value;
+  renderPlatformConfig();
   saveState();
+}
+
+function renderPlatformConfig() {
+  const config = window.VOTING_CONTRACT || {};
+  els.chainIdText.textContent = config.chainId || "31337";
+  els.contractAddressText.textContent = config.contractAddress || "Not deployed";
+  els.loadContractBtn.disabled = !config.contractAddress;
+  els.onChainVoteBtn.disabled = !platform.loaded;
 }
 
 async function createVoter() {
@@ -462,6 +491,113 @@ async function connectMetaMask() {
   }
 }
 
+async function switchToHardhatNetwork() {
+  if (!window.ethereum) {
+    setPlatformStatus("Install MetaMask to connect to the Hardhat blockchain.", "error");
+    return;
+  }
+
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x7a69" }]
+    });
+    setPlatformStatus("MetaMask is using the Hardhat local blockchain.", "success");
+  } catch (error) {
+    if (error.code !== 4902) {
+      setPlatformStatus("Could not switch MetaMask to Hardhat.", "error");
+      return;
+    }
+
+    try {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+          chainId: "0x7a69",
+          chainName: "Hardhat Localhost",
+          nativeCurrency: { name: "Ethereum", symbol: "ETH", decimals: 18 },
+          rpcUrls: ["http://127.0.0.1:8545"],
+          blockExplorerUrls: []
+        }]
+      });
+      setPlatformStatus("Hardhat network added to MetaMask.", "success");
+    } catch {
+      setPlatformStatus("MetaMask did not add the Hardhat network.", "error");
+    }
+  }
+}
+
+async function loadVotingContract() {
+  const config = window.VOTING_CONTRACT || {};
+  if (!config.contractAddress || !config.abi?.length) {
+    setPlatformStatus("Deploy the contract first with: npm run deploy:localhost", "error");
+    return;
+  }
+  if (!window.ethereum || !window.ethers) {
+    setPlatformStatus("MetaMask and ethers.js are required for the on-chain demo.", "error");
+    return;
+  }
+
+  try {
+    await switchToHardhatNetwork();
+    platform.provider = new ethers.BrowserProvider(window.ethereum);
+    await platform.provider.send("eth_requestAccounts", []);
+    platform.signer = await platform.provider.getSigner();
+    platform.account = await platform.signer.getAddress();
+    platform.contract = new ethers.Contract(config.contractAddress, config.abi, platform.signer);
+    platform.loaded = true;
+    await renderOnChainResults();
+    setPlatformStatus(`Contract loaded. Connected wallet: ${platform.account.slice(0, 6)}...${platform.account.slice(-4)}`, "success");
+    await render();
+  } catch (error) {
+    setPlatformStatus(error.shortMessage || error.message || "Could not load the deployed contract.", "error");
+  }
+}
+
+async function renderOnChainResults() {
+  if (!platform.contract) {
+    els.onChainResults.innerHTML = "";
+    return;
+  }
+
+  const count = Number(await platform.contract.getCandidateCount());
+  const rows = [];
+  for (let i = 0; i < count; i += 1) {
+    const candidate = await platform.contract.getCandidate(i);
+    rows.push(`
+      <div class="onchain-row">
+        <span>${candidate.name}</span>
+        <span>${candidate.voteCount.toString()} on-chain vote(s)</span>
+      </div>
+    `);
+  }
+  els.onChainResults.innerHTML = rows.join("");
+}
+
+async function voteOnChain() {
+  if (!platform.contract) {
+    setPlatformStatus("Load the deployed contract before voting on-chain.", "error");
+    return;
+  }
+
+  const candidateIndex = candidates.findIndex((candidate) => candidate.id === state.selectedCandidate);
+  if (candidateIndex < 0) {
+    setPlatformStatus("Select a candidate before submitting the on-chain vote.", "error");
+    return;
+  }
+
+  try {
+    setPlatformStatus("Submitting transaction to Hardhat blockchain...");
+    const tx = await platform.contract.vote(candidateIndex);
+    setPlatformStatus(`Transaction sent: ${tx.hash}`);
+    await tx.wait();
+    await renderOnChainResults();
+    setPlatformStatus(`On-chain vote confirmed in transaction ${tx.hash.slice(0, 12)}...`, "success");
+  } catch (error) {
+    setPlatformStatus(error.shortMessage || error.reason || error.message || "On-chain vote failed.", "error");
+  }
+}
+
 async function boot() {
   renderCandidates();
   if (!loadState()) {
@@ -469,6 +605,9 @@ async function boot() {
   }
   els.createVoterBtn.addEventListener("click", createVoter);
   els.walletBtn.addEventListener("click", connectMetaMask);
+  els.switchNetworkBtn.addEventListener("click", switchToHardhatNetwork);
+  els.loadContractBtn.addEventListener("click", loadVotingContract);
+  els.onChainVoteBtn.addEventListener("click", voteOnChain);
   els.castVoteBtn.addEventListener("click", castVote);
   els.mineBtn.addEventListener("click", confirmPendingVotes);
   els.syncBtn.addEventListener("click", syncNodes);

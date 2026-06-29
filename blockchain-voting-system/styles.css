@@ -194,6 +194,11 @@ legend {
   background: var(--red);
 }
 
+.compact {
+  margin-top: 0;
+  width: auto;
+}
+
 .candidate-list {
   border: 0;
   margin: 14px 0 0;
@@ -378,6 +383,81 @@ legend {
   color: var(--accent-strong);
   padding: 5px 9px;
   font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.platform-panel {
+  min-width: 0;
+}
+
+.platform-status {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbfcfd;
+  color: var(--muted);
+  padding: 12px;
+  line-height: 1.45;
+}
+
+.platform-status.success {
+  color: var(--green);
+}
+
+.platform-status.error {
+  color: var(--red);
+}
+
+.contract-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.contract-grid div {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbfcfd;
+  padding: 10px;
+}
+
+.contract-grid small,
+.contract-grid strong {
+  display: block;
+}
+
+.contract-grid small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.contract-grid strong {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.onchain-results {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.onchain-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbfcfd;
+  padding: 10px;
   font-weight: 800;
 }
 
