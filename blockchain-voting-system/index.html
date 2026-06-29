@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decentralized Voting System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="topbar">
+      <div>
+        <p class="eyebrow">Blockchain mini project</p>
+        <h1>Decentralized Voting System</h1>
+      </div>
+      <div class="chain-health" id="chainHealth">Validating...</div>
+    </section>
+
+    <section class="dashboard">
+      <div class="panel vote-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Ballot</p>
+            <h2>Cast Vote</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" title="Reset demo" aria-label="Reset demo">R</button>
+        </div>
+
+        <label for="voterName">Voter name</label>
+        <div class="inline-form">
+          <input id="voterName" type="text" placeholder="Example: Asha" maxlength="28">
+          <button id="createVoterBtn">Create ID</button>
+        </div>
+        <button class="wallet-button" id="walletBtn">Connect MetaMask</button>
+
+        <label for="voterSelect">Voter ID</label>
+        <select id="voterSelect"></select>
+
+        <fieldset class="candidate-list" id="candidateList">
+          <legend>Select candidate</legend>
+        </fieldset>
+
+        <button class="primary-button" id="castVoteBtn">Cast Vote</button>
+        <p class="status-line" id="statusLine">Create a voter ID or use a demo voter to begin.</p>
+      </div>
+
+      <div class="panel network-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Network</p>
+            <h2>Decentralized Nodes</h2>
+          </div>
+          <button id="syncBtn">Sync Nodes</button>
+        </div>
+        <canvas id="networkCanvas" width="680" height="360" aria-label="Blockchain node network visualization"></canvas>
+        <div class="node-grid" id="nodeGrid"></div>
+      </div>
+
+      <div class="panel results-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Live count</p>
+            <h2>Election Results</h2>
+          </div>
+          <button id="mineBtn">Mine Block</button>
+        </div>
+        <div id="resultsList" class="results-list"></div>
+        <div class="metric-row">
+          <div>
+            <span id="blockCount">0</span>
+            <small>Blocks</small>
+          </div>
+          <div>
+            <span id="voteCount">0</span>
+            <small>Votes</small>
+          </div>
+          <div>
+            <span id="pendingCount">0</span>
+            <small>Pending</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel ledger-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Ledger</p>
+            <h2>Blockchain</h2>
+          </div>
+          <button class="danger-button" id="tamperBtn">Tamper Demo</button>
+        </div>
+        <div class="ledger" id="ledger"></div>
+      </div>
+
+      <div class="panel concepts-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Concepts</p>
+            <h2>Blockchain Proofs Used</h2>
+          </div>
+        </div>
+        <div class="concept-grid">
+          <div>
+            <strong>SHA-256 Hashing</strong>
+            <span>Votes and blocks are converted into fixed hash values.</span>
+          </div>
+          <div>
+            <strong>Merkle Root</strong>
+            <span>Every block stores one root hash representing all votes inside it.</span>
+          </div>
+          <div>
+            <strong>Proof-of-Work</strong>
+            <span>Mining searches for a block hash that starts with zeroes.</span>
+          </div>
+          <div>
+            <strong>Wallet Identity</strong>
+            <span>MetaMask can be used as a voter ID source when available.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
