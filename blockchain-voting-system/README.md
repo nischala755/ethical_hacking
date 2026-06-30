@@ -27,7 +27,13 @@ Install dependencies:
 npm install
 ```
 
-Start the Hardhat blockchain:
+Easy Windows demo:
+
+```powershell
+npm run demo:windows
+```
+
+Or run manually. Start the Hardhat blockchain:
 
 ```powershell
 npm run chain
@@ -38,6 +44,8 @@ In another terminal, deploy the contract:
 ```powershell
 npm run deploy:localhost
 ```
+
+If deployment shows `ECONNREFUSED 127.0.0.1:8545`, the blockchain node is not running. Start it with `npm run chain` and keep that terminal open.
 
 In another terminal, run the website:
 

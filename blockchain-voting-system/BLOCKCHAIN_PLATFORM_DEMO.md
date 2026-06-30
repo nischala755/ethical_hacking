@@ -26,6 +26,34 @@ The browser UI has two parts:
 
 ## Run Steps
 
+You can run the demo in either one-command mode or manual mode.
+
+## Easy Windows Demo
+
+In PowerShell, run:
+
+```powershell
+npm install
+npm run demo:windows
+```
+
+This will:
+
+- start the Hardhat blockchain on `http://127.0.0.1:8545`
+- deploy the Solidity contract
+- generate `contract-config.js`
+- start the website on `http://127.0.0.1:4173`
+
+Open:
+
+`http://127.0.0.1:4173`
+
+For MetaMask test account private keys, open:
+
+`hardhat-node.log`
+
+## Manual Demo
+
 Open three terminals in this folder.
 
 ### Terminal 1: Start Blockchain
@@ -50,6 +78,8 @@ npm run deploy:localhost
 ```
 
 This deploys `DecentralizedVoting.sol` and updates `contract-config.js` with the deployed contract address and ABI.
+
+Important: if you see `ECONNREFUSED 127.0.0.1:8545`, it means Terminal 1 is not running or the Hardhat blockchain has stopped. Run `npm run chain` again and keep that terminal open, then retry `npm run deploy:localhost`.
 
 ### Terminal 3: Run Website
 

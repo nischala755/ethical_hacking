@@ -9,7 +9,7 @@ window.VOTING_CONTRACT = {
     "Rohan Mehta",
     "Sara Khan"
   ],
-  "deployedAt": "2026-06-29T17:09:16.308Z",
+  "deployedAt": "2026-06-30T04:50:02.537Z",
   "abi": [
     {
       "inputs": [

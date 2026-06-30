@@ -45,6 +45,21 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(error);
+  const message = String(error?.message || error);
+  if (message.includes("HH108") || message.includes("ECONNREFUSED")) {
+    console.error("");
+    console.error("Cannot connect to the Hardhat localhost blockchain.");
+    console.error("");
+    console.error("Fix:");
+    console.error("1. Open a new terminal in this project folder.");
+    console.error("2. Run: npm run chain");
+    console.error("3. Keep that terminal open.");
+    console.error("4. In another terminal, run: npm run deploy:localhost");
+    console.error("");
+    console.error("Hardhat RPC must be listening at http://127.0.0.1:8545 before deployment.");
+    console.error("");
+  } else {
+    console.error(error);
+  }
   process.exitCode = 1;
 });
